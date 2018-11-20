@@ -1,0 +1,9 @@
+pool:
+  vmImage: ubuntu-16.04
+
+steps:
+  - script: |
+      export install_script="https://vstscli.blob.core.windows.net/install/install.py"
+      echo "input1\ninput2\ninput3" | python $install_script
+      vsts --version
+    displayName: 'Install VSTS CLI'
