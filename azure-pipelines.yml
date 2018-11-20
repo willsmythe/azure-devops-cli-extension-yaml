@@ -6,14 +6,18 @@ variables:
 
 steps:
   - script: |
+      # Download the install script (python)
       install_script_url='https://vstscli.blob.core.windows.net/install/install.py'
       install_script_path=$(mktemp -t vsts_cli_install_tmp_XXXX)
       curl -# $install_script_url > $install_script_path
-      # the script takes 3 inputs via stdin (all can just be ENTER)
+      
+      # Run the install script
+      # Note: since it prompts for install directory, etc (via stdin), we need to pass new lines for each
       echo $'\n\n\n' | python3 $install_script_path
-      # need to update $PATH to include the install directory of the CLI
+            
+      # Update $PATH with the install directory of the CLI
       echo '##vso[task.prependpath]~/lib/vsts-cli/bin'
-    displayName: 'Install VSTS CLI'
+    displayName: 'Install the VSTS CLI'
 
   - script: |
       vsts --version
@@ -21,4 +25,4 @@ steps:
       vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
       vsts configure --defaults project=vsts-cli-in-pipelines
       vsts build list
-    displayName: 'Run VSTS CLI'
+    displayName: 'Run the VSTS CLI'
