@@ -34,12 +34,9 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - script: |
-      choco install vsts-cli
-      call refreshenv
-      where vsts      
-      vsts --version
-    displayName: 'Install and run VSTS CLI'
+  - script: installVstsCli.bat
+    displayName: 'Install VSTS CLI'
+    
   - script: |
       vsts --version
       vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
