@@ -12,7 +12,7 @@ jobs:
       # TODO: should reference an aka.ms link instead
       install_script_url='https://github.com/Microsoft/vsts-cli/releases/download/0.1.4/install.py'
       install_script_path=$(mktemp -t vsts_cli_install_tmp_XXXX)
-      curl -# $install_script_url > $install_script_path
+      curl -L -# $install_script_url > $install_script_path
       
       # Run it
       # Note: since it prompts for install directory, etc (via stdin), we need to pass new lines for each
@@ -44,8 +44,8 @@ jobs:
     displayName: 'Install VSTS CLI'
 
   - script: |
-      vsts --version
-      vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
-      vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
-      vsts configure --defaults project=vsts-cli-in-pipelines
-      vsts build list
+      call vsts --version
+      call vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
+      call vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
+      call vsts configure --defaults project=vsts-cli-in-pipelines
+      call vsts build list
