@@ -36,7 +36,7 @@ jobs:
     vmImage: 'vs2017-win2016'
   steps:
   - script: |
-      choco install vsts-cli
+      choco install vsts-cli -ia "INSTALLDIR=""c:\vsts-cli"""
       call refreshenv
       for /f "tokens=*" %%i in ('where vsts') do set cliExecutable=%%i
       for /f "tokens=*" %%i in ("%cliExecutable%") do set cliPath=%%~dpi
