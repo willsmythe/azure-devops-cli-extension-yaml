@@ -37,9 +37,9 @@ jobs:
   - script: |
       choco install vsts-cli
       echo PATH: %PATH%
-      refreshenv
+      call refreshenv
       echo PATH: %PATH%
-      vsts --version  
+      vsts --version      
     displayName: 'Install VSTS CLI'
   - script: |
       vsts --version
@@ -48,3 +48,16 @@ jobs:
       vsts configure --defaults project=vsts-cli-in-pipelines
       vsts build list
 
+- job:
+  displayName: 'Windows via Chocolatey (2)'
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - script: installVstsCli.bat
+    displayName: 'Install VSTS CLI'
+  - script: |
+      vsts --version
+      vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
+      vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
+      vsts configure --defaults project=vsts-cli-in-pipelines
+      vsts build list
