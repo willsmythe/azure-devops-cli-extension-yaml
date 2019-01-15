@@ -34,9 +34,15 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - script: installVstsCli.bat
+  - script: |
+      choco install vsts-cli
+      call refreshenv
+      vsts --version
+      for /f "tokens=*" %%i in ('where vsts') do set cliExecutable=%%i
+      for /f "tokens=*" %%i in ("%cliExecutable%") do set cliPath=%%~dpi
+      echo ##vso[task.prependpath]%cliPath%
     displayName: 'Install VSTS CLI'
-    
+
   - script: |
       vsts --version
       vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
