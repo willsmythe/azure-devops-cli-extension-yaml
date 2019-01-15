@@ -1,14 +1,16 @@
 @echo off
-REM choco install vsts-cli
-REM call refreshenv
+choco install vsts-cli
+call refreshenv
 
-echo "Where is VSTS?"
-call where vsts
+REM echo "Where is VSTS?"
+where vsts
 
-for /f %%i in ('where vsts') do set cliExecutable=%%i
+SETLOCAL EnableDelayedExpansion 
+
+for /f "tokens=*" %%i in ('where vsts') do set cliExecutable=%%i
 echo %cliExecutable%
 
-for %%i in ("%cliExecutable%") do set cliPath=%%~dpi
+for /f "tokens=*" %%i in ("%cliExecutable%") do set cliPath=%%~dpi
 echo %cliPath%
 
 echo ##vso[task.prependpath]%cliPath%
