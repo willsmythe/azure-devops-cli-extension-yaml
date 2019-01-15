@@ -1,10 +1,12 @@
-pool:
-  vmImage: ubuntu-16.04
-
 variables:
   access_token: $(System.AccessToken)
 
-steps:
+jobs:
+- job:
+  displayName: 'Linux via curl'
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
   - script: |
       # Download the install script (python)
       install_script_url='https://vstscli.blob.core.windows.net/install/install.py'
@@ -21,8 +23,27 @@ steps:
 
   - script: |
       vsts --version
-      vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)    
+      vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
       vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
       vsts configure --defaults project=vsts-cli-in-pipelines
       vsts build list
     displayName: 'Run the VSTS CLI'
+
+- job:
+  displayName: 'Windows via Chocolatey'
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - script: |
+      choco install vsts-cli
+      echo %PATH%
+      refreshenv
+      echo %PATH%
+    displayName: 'Install VSTS CLI'
+  - script: |
+      vsts --version
+      vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
+      vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
+      vsts configure --defaults project=vsts-cli-in-pipelines
+      vsts build list
+
