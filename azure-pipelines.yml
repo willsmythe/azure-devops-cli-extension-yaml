@@ -36,9 +36,10 @@ jobs:
   steps:
   - script: |
       choco install vsts-cli
-      echo %PATH%
+      echo PATH: %PATH%
       refreshenv
-      echo %PATH%
+      echo PATH: %PATH%
+      vsts --version  
     displayName: 'Install VSTS CLI'
   - script: |
       vsts --version
