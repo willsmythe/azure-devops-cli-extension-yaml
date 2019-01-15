@@ -8,12 +8,13 @@ jobs:
     vmImage: 'ubuntu-16.04'
   steps:
   - script: |
-      # Download the install script (python)
-      install_script_url='https://vstscli.blob.core.windows.net/install/install.py'
+      # Download the install script
+      # TODO: should reference an aka.ms link instead
+      install_script_url='https://github.com/Microsoft/vsts-cli/releases/download/0.1.4/install.py'
       install_script_path=$(mktemp -t vsts_cli_install_tmp_XXXX)
       curl -# $install_script_url > $install_script_path
       
-      # Run the install script
+      # Run it
       # Note: since it prompts for install directory, etc (via stdin), we need to pass new lines for each
       echo $'\n\n\n' | python3 $install_script_path
             
@@ -37,7 +38,6 @@ jobs:
   - script: |
       choco install vsts-cli
       call refreshenv
-      vsts --version
       for /f "tokens=*" %%i in ('where vsts') do set cliExecutable=%%i
       for /f "tokens=*" %%i in ("%cliExecutable%") do set cliPath=%%~dpi
       echo ##vso[task.prependpath]%cliPath%
