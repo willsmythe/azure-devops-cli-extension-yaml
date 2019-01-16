@@ -10,8 +10,10 @@ jobs:
   - script: |
       az --version
       az extension list-available --output table
-      az extension add azure-devops
-      az devops login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
+      az extension add -n azure-devops
+      az devops configure --defaults instance=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
+      az devops login --instance $(System.TeamFoundationCollectionUri) --token $(access_token) --use-git-aliases yes
+      git pr list
     displayName: 'Show AZ details / install devops extension'
 
 - job:
@@ -22,4 +24,8 @@ jobs:
   - script: |
       az --version
       az extension list-available --output table
-    displayName: 'Show AZ details'
+      az extension add -n azure-devops
+      az devops configure --defaults instance=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
+      az devops login --instance $(System.TeamFoundationCollectionUri) --token $(access_token) --use-git-aliases yes
+      git pr list
+    displayName: 'Show AZ details / install devops extension'
