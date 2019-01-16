@@ -3,49 +3,23 @@ variables:
 
 jobs:
 - job:
-  displayName: 'Linux via curl'
+  displayName: 'Linux'
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
   - script: |
-      # Download the install script
-      # TODO: should reference an aka.ms link instead
-      install_script_url='https://github.com/Microsoft/vsts-cli/releases/download/0.1.4/install.py'
-      install_script_path=$(mktemp -t vsts_cli_install_tmp_XXXX)
-      curl -L -# $install_script_url > $install_script_path
-      
-      # Run it
-      # Note: since it prompts for install directory, etc (via stdin), we need to pass new lines for each
-      echo $'\n\n\n' | python3 $install_script_path
-            
-      # Update $PATH with the install directory of the CLI
-      echo '##vso[task.prependpath]~/lib/vsts-cli/bin'
-    displayName: 'Install the VSTS CLI'
-
-  - script: |
-      vsts --version
-      vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
-      vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
-      vsts configure --defaults project=vsts-cli-in-pipelines
-      vsts build list
-    displayName: 'Run the VSTS CLI'
+      az --version
+      az extension list-available --output table
+      az extension add azure-devops
+      az devops login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
+    displayName: 'Show AZ details / install devops extension'
 
 - job:
-  displayName: 'Windows via Chocolatey'
+  displayName: 'Windows'
   pool:
     vmImage: 'vs2017-win2016'
   steps:
   - script: |
-      choco install vsts-cli
-      call refreshenv
-      for /f "tokens=*" %%i in ('where vsts') do set cliExecutable=%%i
-      for /f "tokens=*" %%i in ("%cliExecutable%") do set cliPath=%%~dpi
-      echo ##vso[task.prependpath]%cliPath%
-    displayName: 'Install VSTS CLI'
-
-  - script: |
-      call vsts --version
-      call vsts login --instance $(System.TeamFoundationCollectionUri) --token $(access_token)
-      call vsts configure --defaults instance=$(System.TeamFoundationCollectionUri) 
-      call vsts configure --defaults project=vsts-cli-in-pipelines
-      call vsts build list
+      az --version
+      az extension list-available --output table
+    displayName: 'Show AZ details'
