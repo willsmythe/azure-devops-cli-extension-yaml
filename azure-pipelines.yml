@@ -8,6 +8,7 @@ jobs:
     vmImage: 'ubuntu-16.04'
   steps:
   - script: |
+      echo "PAT: ${AZURE_DEVOPS_CLI_PAT}"
       az --version
       az extension list-available --output table
       az extension add -n azure-devops
@@ -23,6 +24,8 @@ jobs:
   steps:
   - bash: |
       echo "${PATH}"
+      echo "$(which az)"
+      echo "${AZURE_DEVOPS_CLI_PAT}"
   - powershell: |
       az --version
       az extension list-available --output table
