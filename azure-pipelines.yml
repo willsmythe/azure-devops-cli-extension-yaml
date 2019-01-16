@@ -11,7 +11,7 @@ jobs:
       az --version
       az extension list-available --output table
       az extension add -n azure-devops
-      az devops configure --defaults instance=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
+      az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
       az devops login --instance $(System.TeamFoundationCollectionUri) --token $(access_token) --use-git-aliases yes
       git pr list
     displayName: 'Show AZ details / install devops extension'
@@ -21,11 +21,11 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - script: |
+  - bash: |
       az --version
       az extension list-available --output table
       az extension add -n azure-devops
-      az devops configure --defaults instance=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
+      az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject)
       az devops login --instance $(System.TeamFoundationCollectionUri) --token $(access_token) --use-git-aliases yes
       git pr list
     displayName: 'Show AZ details / install devops extension'
