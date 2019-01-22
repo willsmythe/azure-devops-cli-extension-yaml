@@ -1,5 +1,3 @@
-variables:
-  AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
 jobs:
 - job:
