@@ -7,30 +7,18 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
-  - script: |
-      echo "PAT: ${AZURE_DEVOPS_CLI_PAT}"
-      az --version
-      az extension list-available --output table
-      az extension add -n azure-devops
-      az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject) --use-git-aliases yes
-      az pipelines build list
-      git pr list
-    displayName: 'Show AZ details / install devops extension'
+  - template: azure-pipelines-steps.yml
 
 - job:
   displayName: 'Windows'
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - bash: |
-      echo "${PATH}"
-      echo "$(which az)"
-      echo "${AZURE_DEVOPS_CLI_PAT}"
-  - powershell: |
-      az --version
-      az extension list-available --output table
-      az extension add -n azure-devops
-      az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject) --use-git-aliases yes
-      az pipelines build list
-      git pr list
-    displayName: 'Show AZ details / install devops extension'
+  - template: azure-pipelines-steps.yml
+
+- job:
+  displayName: 'macOS'
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+  - template: azure-pipelines-steps.yml

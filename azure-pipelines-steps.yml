@@ -1,0 +1,9 @@
+steps:
+- powershell: |
+    az --version
+    az extension list-available --output table
+    az extension add -n azure-devops
+    az devops configure --defaults organization=$(System.TeamFoundationCollectionUri) project=$(System.TeamProject) --use-git-aliases yes
+    az pipelines build list
+    git pr list
+  displayName: 'Show AZ details / install devops extension'
